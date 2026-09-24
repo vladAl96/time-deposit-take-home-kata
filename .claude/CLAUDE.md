@@ -43,10 +43,18 @@ implementation.
 - `src/main/kotlin/org/ikigaidigital/adapter/output/persistence/` — JPA
   entities (`TimeDepositEntity`, `WithdrawalEntity`), Spring Data
   repositories, and `TimeDepositPersistenceAdapter` implementing the
-  outbound port.
+  outbound port. `WithdrawalEntity.timeDeposit` is a real `@ManyToOne`
+  association (not a plain `Int` column) because Hibernate requires the
+  `mappedBy` side of `TimeDepositEntity.withdrawals`'s `@OneToMany` to be an
+  actual association back to the owner; a `timeDepositId` computed property
+  exposes the FK value for domain mapping. `TimeDepositJpaRepository`
+  exposes `findAllEagerly()` (a `LEFT JOIN FETCH` query) so the GET endpoint
+  loads withdrawals in one round trip instead of N+1 lazy loads.
 - `src/main/resources/application.yml` — Postgres datasource config,
   `ddl-auto: update` (no Flyway/Liquibase set up — see comment in the file),
-  springdoc/swagger-ui path.
+  `defer-datasource-initialization: true` (so `data.sql` runs after
+  Hibernate creates the schema, not before — otherwise the seed insert
+  fails with "relation does not exist"), springdoc/swagger-ui path.
 - `src/main/resources/data.sql` — demo seed rows (there's no endpoint for
   creating time deposits/withdrawals, so this is the seam used to get data
   into the DB for manual/swagger testing).
@@ -58,6 +66,9 @@ implementation.
 - `src/test/kotlin/org/ikigaidigital/application/service/TimeDepositServiceTest.kt`
   — unit test for `TimeDepositService` against an in-memory fake of
   `TimeDepositRepositoryPort`.
+- `src/test/kotlin/org/ikigaidigital/adapter/output/persistence/TimeDepositPersistenceAdapterTest.kt`
+  — unit test for `TimeDepositPersistenceAdapter`'s entity<->domain mapping
+  (`findAll`/`saveAll`), with `TimeDepositJpaRepository` mocked via Mockito.
 - `src/test/kotlin/org/ikigaidigital/adapter/input/web/TimeDepositControllerTest.kt`
   — `@WebMvcTest` slice test for `TimeDepositController` (use cases mocked).
 - `src/test/kotlin/org/ikigaidigital/TimeDepositApiIntegrationTest.kt` —
@@ -65,9 +76,9 @@ implementation.
   end-to-end through MockMvc against a real database; requires Docker.
 
 Not yet done: the OpenAPI contract is whatever springdoc auto-generates (no
-manual annotations/spec written yet); no tests exist yet for the persistence
-adapter's mapping logic beyond what the integration test exercises
-indirectly.
+manual annotations/spec written yet); the README's submission section asks
+for instructions on triggering the endpoints via Swagger, which don't exist
+anywhere in the repo yet (no top-level run/usage README section).
 
 ## Domain rules already encoded (do not silently change these)
 
@@ -127,10 +138,20 @@ grading likely depend on numerically identical output for these three plans.
   is on the classpath (swagger-ui at `/swagger-ui.html`); no manual
   annotations/spec written yet beyond what it auto-generates from the
   controller.
-- **Testing**: testcontainers (`org.testcontainers:postgresql`,
+- **Testing**: testcontainers (`org.testcontainers:testcontainers-postgresql`,
+  `org.testcontainers:testcontainers-junit-jupiter`,
   `spring-boot-testcontainers`) for anything touching a real database, JUnit 5
-  + AssertJ for unit tests — see the test files listed under "Current state"
-  above.
+  + AssertJ for unit tests, and Mockito for mocking Spring Data repository
+  ports — see the test files listed under "Current state" above. `pom.xml`'s
+  `dependencyManagement` imports `testcontainers-bom` *before*
+  `spring-boot-dependencies` deliberately: Maven's BOM import takes the first
+  declaration it sees for a given GA, so the reverse order silently pins
+  testcontainers to the older version `spring-boot-dependencies` bundles,
+  whose docker-java client defaults to a Docker Engine API version that
+  newer Docker Desktop daemons reject with HTTP 400. The `junit-jupiter`/
+  `postgresql` testcontainers modules also need the `testcontainers-`
+  prefixed artifact IDs (renamed in 2.x) or they silently resolve to that
+  same stale version too.
 - **Commits**: atomic, one logical change per commit.
 - **Code quality**: SOLID principles and clean-code practices, applied
   pragmatically — this is a small kata, not a platform; don't over-engineer

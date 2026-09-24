@@ -35,6 +35,23 @@ each entry short — a few bullet points, not a narrative.
 
 ## Log
 
+### 2026-09-24 — Persistence adapter unit test
+
+- **Agent/model**: Claude Code (Sonnet 5)
+- **Task**: Write a unit test for `TimeDepositPersistenceAdapter`.
+- **Changes**:
+  - New `adapter/output/persistence/TimeDepositPersistenceAdapterTest.kt`:
+    mocks `TimeDepositJpaRepository` (Mockito, consistent with the
+    `@MockBean` style already used in `TimeDepositControllerTest`) and
+    covers `findAll` mapping entities/withdrawals to domain records
+    (including a no-withdrawals case), and `saveAll` persisting the
+    calculator's new balance while preserving `id`/`planType`/`days`/
+    `withdrawals` from the previously-stored entity.
+- **AI contribution**: Fully AI-written test, verified by running
+  `mvn test` (all 4 new cases pass, full suite green).
+- **Why AI was used**: Mechanical test-writing against an already-defined
+  adapter contract; fast to generate and verify against the real suite.
+
 ### 2026-09-24 — Unit and integration tests for the scaffold
 
 - **Agent/model**: Claude Code (Sonnet 5)
