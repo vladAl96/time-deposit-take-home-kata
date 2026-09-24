@@ -35,6 +35,22 @@ each entry short — a few bullet points, not a narrative.
 
 ## Log
 
+### 2026-09-24 — OpenAPI annotations on the controller
+
+- **Agent/model**: Claude Code (Sonnet 5)
+- **Task**: Document the REST endpoints in `TimeDepositController` with
+  OpenAPI annotations (`@Operation`, `@ApiResponses`, `@Parameter`).
+- **Changes**:
+  - `adapter/input/web/TimeDepositController.kt`: added `@Operation`
+    (summary/description) and `@ApiResponses` to both endpoints; the GET
+    endpoint's 200 response also declares an array `Schema` of
+    `TimeDepositResponse`. `@Parameter` was not applicable — neither
+    endpoint takes a request parameter.
+- **AI contribution**: Fully AI-written annotations, verified with
+  `mvn compile` (offline, no errors).
+- **Why AI was used**: Mechanical documentation work against an
+  already-defined, unchanged controller contract.
+
 ### 2026-09-24 — Persistence adapter unit test
 
 - **Agent/model**: Claude Code (Sonnet 5)
