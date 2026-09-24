@@ -6,4 +6,4 @@ services:
       POSTGRES_USER: time_deposit
       POSTGRES_PASSWORD: time_deposit
     ports:
-      - "5432:5432"
+      - "54321:5432"

@@ -75,10 +75,12 @@ implementation.
   `@SpringBootTest` + testcontainers Postgres, both REST endpoints exercised
   end-to-end through MockMvc against a real database; requires Docker.
 
-Not yet done: the OpenAPI contract is whatever springdoc auto-generates (no
-manual annotations/spec written yet); the README's submission section asks
-for instructions on triggering the endpoints via Swagger, which don't exist
-anywhere in the repo yet (no top-level run/usage README section).
+`TimeDepositController`'s two endpoints carry manual `@Operation`/
+`@ApiResponses` OpenAPI annotations (springdoc still auto-generates the rest
+of the contract from them). `RUNNING.md` at the repo root has the
+submission-required instructions for starting the app (`docker-compose up`
++ `mvn spring-boot:run`) and triggering both endpoints via Swagger UI at
+`/swagger-ui.html`.
 
 ## Domain rules already encoded (do not silently change these)
 

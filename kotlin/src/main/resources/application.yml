@@ -5,7 +5,7 @@ spring:
   application:
     name: time-deposit-kata
   datasource:
-    url: jdbc:postgresql://localhost:5432/time_deposit
+    url: jdbc:postgresql://localhost:54321/time_deposit
     username: time_deposit
     password: time_deposit
   jpa:

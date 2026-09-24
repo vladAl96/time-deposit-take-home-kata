@@ -35,6 +35,26 @@ each entry short — a few bullet points, not a narrative.
 
 ## Log
 
+### 2026-09-24 — Run/Swagger instructions
+
+- **Agent/model**: Claude Code (Sonnet 5)
+- **Task**: Provide instructions for starting the app and triggering the
+  endpoints via the Swagger contract, per the README's submission
+  instructions.
+- **Changes**:
+  - New `RUNNING.md` at the repo root: prerequisites, `docker-compose up`
+    for Postgres, `mvn spring-boot:run`, the Swagger UI URL
+    (`/swagger-ui.html`), and step-by-step instructions for exercising both
+    the GET and POST endpoints through it.
+  - Updated `.claude/CLAUDE.md` to point at `RUNNING.md` and note the
+    controller's manual OpenAPI annotations, replacing the stale "not yet
+    done" note.
+- **AI contribution**: Fully AI-written; values (ports, datasource
+  credentials, swagger path) pulled directly from `application.yml` and
+  `docker-compose.yml` rather than guessed.
+- **Why AI was used**: Mechanical documentation task, transcribing already
+  -established config into user-facing run instructions.
+
 ### 2026-09-24 — OpenAPI annotations on the controller
 
 - **Agent/model**: Claude Code (Sonnet 5)
