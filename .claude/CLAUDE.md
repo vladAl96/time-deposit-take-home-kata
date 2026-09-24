@@ -15,18 +15,59 @@ commit `2039a05 Cleanup`) — do not resurrect them.
 
 ## Current state (as of this writing)
 
-`kotlin/` is a plain Maven project (JDK 17, Kotlin 1.7.20) containing only:
+`kotlin/` is a Maven + Spring Boot project (JDK 17, Kotlin 1.7.20, Spring
+Boot 3.1.5). The domain calculator is untouched; a hexagonal scaffold has
+been added around it, but the business logic inside the adapters is still
+minimal/skeletal — treat this as infrastructure setup, not a finished
+implementation.
 
-- `src/main/kotlin/org/ikigaidigital/TimeDeposit.kt` — the domain model.
+- `src/main/kotlin/org/ikigaidigital/TimeDeposit.kt` — the domain model
+  (unchanged).
 - `src/main/kotlin/org/ikigaidigital/TimeDepositCalculator.kt` — the interest
-  engine, entry point `updateBalance(xs: List<TimeDeposit>)`.
-- `src/test/kotlin/org/ikigaidigital/TimeDepositCalculatorTest.kt` — a single
-  placeholder test that does not actually assert calculator behavior yet.
+  engine, entry point `updateBalance(xs: List<TimeDeposit>)` (unchanged).
+- `src/main/kotlin/org/ikigaidigital/TimeDepositApplication.kt` — Spring Boot
+  entry point (`@SpringBootApplication`).
+- `src/main/kotlin/org/ikigaidigital/domain/` — `Withdrawal` and
+  `TimeDepositRecord` (a `TimeDeposit` + its withdrawals), kept separate from
+  `TimeDeposit` so the calculator's input type stays untouched.
+- `src/main/kotlin/org/ikigaidigital/application/port/input/` —
+  `UpdateTimeDepositBalancesUseCase`, `GetAllTimeDepositsUseCase` (inbound
+  ports, one per REST endpoint).
+- `src/main/kotlin/org/ikigaidigital/application/port/output/` —
+  `TimeDepositRepositoryPort` (outbound port for persistence).
+- `src/main/kotlin/org/ikigaidigital/application/service/TimeDepositService.kt`
+  — implements both use cases; the only place that calls
+  `TimeDepositCalculator.updateBalance`.
+- `src/main/kotlin/org/ikigaidigital/adapter/input/web/` —
+  `TimeDepositController` (the two endpoints) and its response DTOs.
+- `src/main/kotlin/org/ikigaidigital/adapter/output/persistence/` — JPA
+  entities (`TimeDepositEntity`, `WithdrawalEntity`), Spring Data
+  repositories, and `TimeDepositPersistenceAdapter` implementing the
+  outbound port.
+- `src/main/resources/application.yml` — Postgres datasource config,
+  `ddl-auto: update` (no Flyway/Liquibase set up — see comment in the file),
+  springdoc/swagger-ui path.
+- `src/main/resources/data.sql` — demo seed rows (there's no endpoint for
+  creating time deposits/withdrawals, so this is the seam used to get data
+  into the DB for manual/swagger testing).
+- `docker-compose.yml` — local Postgres for `mvn spring-boot:run`.
+- `src/test/kotlin/org/ikigaidigital/TimeDepositCalculatorTest.kt` — real
+  unit tests covering every domain rule (30-day blackout, per-plan rates,
+  premium's 45-day threshold, student's 366-day cutoff, HALF_UP rounding,
+  independent mutation across a list).
+- `src/test/kotlin/org/ikigaidigital/application/service/TimeDepositServiceTest.kt`
+  — unit test for `TimeDepositService` against an in-memory fake of
+  `TimeDepositRepositoryPort`.
+- `src/test/kotlin/org/ikigaidigital/adapter/input/web/TimeDepositControllerTest.kt`
+  — `@WebMvcTest` slice test for `TimeDepositController` (use cases mocked).
+- `src/test/kotlin/org/ikigaidigital/TimeDepositApiIntegrationTest.kt` —
+  `@SpringBootTest` + testcontainers Postgres, both REST endpoints exercised
+  end-to-end through MockMvc against a real database; requires Docker.
 
-There is no REST layer, no database, no persistence, no dependency
-injection framework, and no build for anything beyond `mvn compile`/`test`
-via `exec-maven-plugin`. All of that is greenfield — build it, don't assume
-it exists.
+Not yet done: the OpenAPI contract is whatever springdoc auto-generates (no
+manual annotations/spec written yet); no tests exist yet for the persistence
+adapter's mapping logic beyond what the integration test exercises
+indirectly.
 
 ## Domain rules already encoded (do not silently change these)
 
@@ -69,13 +110,27 @@ grading likely depend on numerically identical output for these three plans.
 
 - **Persistence**: two tables — `timeDeposits(id, planType, days, balance)`
   and `withdrawals(id, timeDepositId, amount, date)`, FK
-  `withdrawals.timeDepositId -> timeDeposits.id`.
-- **Architecture**: Hexagonal (ports & adapters) — keep
-  `TimeDepositCalculator`'s domain logic isolated from web/persistence
-  concerns; the two REST endpoints and the DB are adapters around it.
-- **API contract**: OpenAPI/Swagger-first.
-- **Testing**: testcontainers for anything touching a real database, JUnit 5
-  + AssertJ for unit tests (already on the classpath).
+  `withdrawals.timeDepositId -> timeDeposits.id`. Postgres, mapped via JPA
+  entities under `adapter/output/persistence/`; table names are quoted
+  (`` `timeDeposits` ``/`` `withdrawals` ``) in `@Table` to preserve the exact
+  camelCase from the README instead of Postgres folding to lowercase.
+- **Architecture**: Hexagonal (ports & adapters), already scaffolded — see
+  "Current state" above for the package layout. `TimeDepositCalculator`'s
+  domain logic stays isolated from web/persistence concerns; the two REST
+  endpoints and the DB are adapters around it via `TimeDepositService`.
+- **Framework**: Spring Boot 3.1.5 (`spring-boot-starter-web`,
+  `spring-boot-starter-data-jpa`), chosen because it's the requested
+  framework and is JDK 17 / Kotlin 1.7.20 compatible. `kotlin-maven-plugin`
+  has the `spring`/`jpa` compiler plugins enabled (all-open/no-arg) so
+  `@Component`/`@Entity` Kotlin classes work without being declared `open`.
+- **API contract**: OpenAPI/Swagger-first — `springdoc-openapi-starter-webmvc-ui`
+  is on the classpath (swagger-ui at `/swagger-ui.html`); no manual
+  annotations/spec written yet beyond what it auto-generates from the
+  controller.
+- **Testing**: testcontainers (`org.testcontainers:postgresql`,
+  `spring-boot-testcontainers`) for anything touching a real database, JUnit 5
+  + AssertJ for unit tests — see the test files listed under "Current state"
+  above.
 - **Commits**: atomic, one logical change per commit.
 - **Code quality**: SOLID principles and clean-code practices, applied
   pragmatically — this is a small kata, not a platform; don't over-engineer
