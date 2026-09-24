@@ -35,6 +35,36 @@ each entry short — a few bullet points, not a narrative.
 
 ## Log
 
+### 2026-09-24 — Update-balances verb: POST to PATCH
+
+- **Agent/model**: Claude Code (Sonnet 5)
+- **Task**: Developer flagged that the update-balances endpoint recalculates
+  and persists updates to *existing* resources, so it's semantically a
+  partial update, not a create — should be `PATCH`, not `POST`. Developer
+  also argued that, potentially, the endpoint could be made async (202 Accepted +
+  background job) if it starts blocking on real load.
+- **Changes**:
+  - `TimeDepositController.kt`: `@PostMapping` → `@PatchMapping` on
+    `/api/time-deposits/update-balances`; added a comment noting async
+    (202 + background job) as a possible future evolution if data volume
+    makes this latency-sensitive, and that doing so would require a
+    completion-visibility mechanism (the two-endpoint cap doesn't allow a
+    status/polling endpoint today) plus concurrency control (e.g.
+    optimistic locking via a version column) around the read-modify-write
+    of balances to avoid lost updates from overlapping runs.
+  - Updated `TimeDepositControllerTest.kt` and
+    `TimeDepositApiIntegrationTest.kt` to call `mockMvc.patch(...)` instead
+    of `.post(...)`.
+  - Updated `RUNNING.md`'s Swagger walkthrough to reference `PATCH`.
+- **AI contribution**: Agent recommended staying synchronous for now (the
+  operation is a fast in-memory recompute at kata scale, and adding async
+  machinery without a status endpoint to observe it would add complexity
+  the requirements don't call for) and made the verb change plus the
+  forward-looking comment on request; all code changes were AI-written,
+  reviewed by the agent via `mvn compile`/`mvn test`.
+- **Why AI was used**: Small, mechanical rename-and-annotate change
+  touching several files consistently (controller, two test files, docs).
+
 ### 2026-09-24 — Run/Swagger instructions
 
 - **Agent/model**: Claude Code (Sonnet 5)

@@ -10,7 +10,7 @@ import org.ikigaidigital.adapter.input.web.dto.TimeDepositResponse
 import org.ikigaidigital.application.port.input.GetAllTimeDepositsUseCase
 import org.ikigaidigital.application.port.input.UpdateTimeDepositBalancesUseCase
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -30,7 +30,15 @@ class TimeDepositController(
             ApiResponse(responseCode = "200", description = "Balances recalculated and persisted successfully")
         ]
     )
-    @PostMapping("/update-balances")
+    // PATCH: this recalculates and persists balances in place synchronously, which fits
+    // the kata's current scale (a handful of rows, near-instant round trip). If the table
+    // grows large enough for this to become a real latency concern, the natural evolution
+    // is to make it async (202 Accepted + a background job), but that requires a way for
+    // clients to observe completion (a status/polling endpoint) and concurrency control
+    // around the read-modify-write of balances (e.g. optimistic locking via a version
+    // column, or a DB-level lock) to avoid lost updates if two runs overlap — neither of
+    // which the current two-endpoint scope calls for.
+    @PatchMapping("/update-balances")
     fun updateBalances() {
         updateTimeDepositBalances.updateAllBalances()
     }

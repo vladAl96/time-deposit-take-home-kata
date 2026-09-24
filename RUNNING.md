@@ -64,9 +64,9 @@ Both endpoints are listed under the `time-deposit-controller` tag.
    }
    ```
 
-### POST `/api/time-deposits/update-balances` — apply monthly interest
+### PATCH `/api/time-deposits/update-balances` — apply monthly interest
 
-1. Expand `POST /api/time-deposits/update-balances`.
+1. Expand `PATCH /api/time-deposits/update-balances`.
 2. Click **Try it out**, then **Execute** (no request body needed).
 3. A `200` response confirms the balances were recalculated and persisted.
 4. Re-run the GET endpoint above to see the updated `balance` values.

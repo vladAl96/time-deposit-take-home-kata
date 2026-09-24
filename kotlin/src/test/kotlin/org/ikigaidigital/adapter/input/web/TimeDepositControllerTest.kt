@@ -13,7 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.patch
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -31,8 +31,8 @@ class TimeDepositControllerTest {
     lateinit var getAllTimeDeposits: GetAllTimeDepositsUseCase
 
     @Test
-    fun `POST update-balances delegates to the use case and returns 200`() {
-        mockMvc.post("/api/time-deposits/update-balances")
+    fun `PATCH update-balances delegates to the use case and returns 200`() {
+        mockMvc.patch("/api/time-deposits/update-balances")
             .andExpect { status { isOk() } }
 
         verify(updateTimeDepositBalances).updateAllBalances()

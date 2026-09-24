@@ -15,7 +15,7 @@ import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.patch
 import org.testcontainers.postgresql.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
@@ -26,7 +26,7 @@ private val TOLERANCE = Offset.offset(0.001)
  * End-to-end through a real Postgres container: HTTP -> service ->
  * TimeDepositCalculator -> JPA -> Postgres and back. Requires Docker.
  * Ordered because both tests share one seeded database: the GET assertions
- * must run before the POST mutates balances.
+ * must run before the PATCH mutates balances.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
@@ -78,8 +78,8 @@ class TimeDepositApiIntegrationTest {
 
     @Test
     @Order(2)
-    fun `POST update-balances runs the calculator and persists the new balances`() {
-        mockMvc.post("/api/time-deposits/update-balances")
+    fun `PATCH update-balances runs the calculator and persists the new balances`() {
+        mockMvc.patch("/api/time-deposits/update-balances")
             .andExpect { status { isOk() } }
 
         val deposits = currentDeposits()
