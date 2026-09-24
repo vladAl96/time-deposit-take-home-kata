@@ -5,7 +5,10 @@
 INSERT INTO "timeDeposits" (id, "planType", days, balance) VALUES
     (1, 'basic', 45, 1000.00),
     (2, 'student', 100, 2000.00),
-    (3, 'premium', 60, 5000.00)
+    (3, 'premium', 60, 5000.00),
+    (4, 'premium', 20, 5000.00),
+    (5, 'student', 366, 2000.00),
+    (6, 'basic', 29, 1000.00)
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO "withdrawals" (id, "timeDepositId", amount, date) VALUES
