@@ -1,4 +1,4 @@
-package org.ikigaidigital
+package org.ikigaidigital.domain
 
 import java.math.BigDecimal
 import java.math.RoundingMode

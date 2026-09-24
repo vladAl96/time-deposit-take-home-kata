@@ -1,8 +1,8 @@
 package org.ikigaidigital.adapter.input.web
 
-import org.ikigaidigital.TimeDeposit
 import org.ikigaidigital.application.port.input.GetAllTimeDepositsUseCase
 import org.ikigaidigital.application.port.input.UpdateTimeDepositBalancesUseCase
+import org.ikigaidigital.domain.TimeDeposit
 import org.ikigaidigital.domain.TimeDepositRecord
 import org.ikigaidigital.domain.Withdrawal
 import org.junit.jupiter.api.Test

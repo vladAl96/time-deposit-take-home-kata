@@ -1,9 +1,9 @@
 package org.ikigaidigital.application.service
 
-import org.ikigaidigital.TimeDepositCalculator
 import org.ikigaidigital.application.port.input.GetAllTimeDepositsUseCase
 import org.ikigaidigital.application.port.input.UpdateTimeDepositBalancesUseCase
 import org.ikigaidigital.application.port.output.TimeDepositRepositoryPort
+import org.ikigaidigital.domain.TimeDepositCalculator
 import org.ikigaidigital.domain.TimeDepositRecord
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

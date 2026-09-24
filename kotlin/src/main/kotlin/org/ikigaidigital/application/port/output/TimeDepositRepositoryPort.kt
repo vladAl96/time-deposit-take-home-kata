@@ -1,6 +1,6 @@
 package org.ikigaidigital.application.port.output
 
-import org.ikigaidigital.TimeDeposit
+import org.ikigaidigital.domain.TimeDeposit
 import org.ikigaidigital.domain.TimeDepositRecord
 
 interface TimeDepositRepositoryPort {

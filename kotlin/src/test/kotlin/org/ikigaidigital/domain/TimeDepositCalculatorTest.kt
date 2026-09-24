@@ -1,4 +1,4 @@
-package org.ikigaidigital
+package org.ikigaidigital.domain
 
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.data.Offset

@@ -1,7 +1,7 @@
 package org.ikigaidigital.adapter.output.persistence
 
-import org.ikigaidigital.TimeDeposit
 import org.ikigaidigital.application.port.output.TimeDepositRepositoryPort
+import org.ikigaidigital.domain.TimeDeposit
 import org.ikigaidigital.domain.TimeDepositRecord
 import org.ikigaidigital.domain.Withdrawal
 import org.springframework.stereotype.Component

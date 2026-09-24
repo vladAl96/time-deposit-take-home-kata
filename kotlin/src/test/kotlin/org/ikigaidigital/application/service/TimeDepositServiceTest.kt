@@ -2,9 +2,9 @@ package org.ikigaidigital.application.service
 
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.data.Offset
-import org.ikigaidigital.TimeDeposit
-import org.ikigaidigital.TimeDepositCalculator
 import org.ikigaidigital.application.port.output.TimeDepositRepositoryPort
+import org.ikigaidigital.domain.TimeDeposit
+import org.ikigaidigital.domain.TimeDepositCalculator
 import org.ikigaidigital.domain.TimeDepositRecord
 import org.ikigaidigital.domain.Withdrawal
 import org.junit.jupiter.api.Test
