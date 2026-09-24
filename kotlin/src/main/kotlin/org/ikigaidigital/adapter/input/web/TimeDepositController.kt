@@ -23,7 +23,8 @@ class TimeDepositController(
 
     @Operation(
         summary = "Update balances of all time deposits",
-        description = "Applies the monthly interest calculation to every time deposit and persists the updated balances."
+        description = "Applies the monthly interest calculation to every time deposit and persists the updated balances. " +
+                "This method is not idempotent and will apply interest calculation on every call."
     )
     @ApiResponses(
         value = [
