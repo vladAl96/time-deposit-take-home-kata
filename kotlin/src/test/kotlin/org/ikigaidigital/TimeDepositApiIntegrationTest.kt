@@ -68,7 +68,7 @@ class TimeDepositApiIntegrationTest {
     fun `GET returns the seeded time deposits shaped with withdrawals`() {
         val deposits = currentDeposits()
 
-        assertThat(deposits).hasSize(3)
+        assertThat(deposits).hasSize(6)
         val basic = deposits.single { it["id"] == 1 }
         assertThat(basic["planType"]).isEqualTo("basic")
         assertThat(basic["withdrawals"] as List<*>).hasSize(1)

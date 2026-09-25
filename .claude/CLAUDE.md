@@ -21,15 +21,25 @@ been added around it, but the business logic inside the adapters is still
 minimal/skeletal — treat this as infrastructure setup, not a finished
 implementation.
 
-- `src/main/kotlin/org/ikigaidigital/TimeDeposit.kt` — the domain model
+- `src/main/kotlin/org/ikigaidigital/domain/models/TimeDeposit.kt` — the
+  domain model (unchanged).
+- `src/main/kotlin/org/ikigaidigital/domain/models/PlanType.kt` — enum
+  encoding each plan's onset days, cutoff days, and interest rate; used by
+  the calculator instead of branching on plan-type strings.
+- `src/main/kotlin/org/ikigaidigital/domain/models/Withdrawal.kt` — domain
+  withdrawal, kept separate from `TimeDeposit` so the calculator's input
+  type stays untouched.
+- `src/main/kotlin/org/ikigaidigital/domain/service/TimeDepositCalculator.kt`
+  — the interest engine, entry point `updateBalance(xs: List<TimeDeposit>)`
   (unchanged).
-- `src/main/kotlin/org/ikigaidigital/TimeDepositCalculator.kt` — the interest
-  engine, entry point `updateBalance(xs: List<TimeDeposit>)` (unchanged).
 - `src/main/kotlin/org/ikigaidigital/TimeDepositApplication.kt` — Spring Boot
   entry point (`@SpringBootApplication`).
-- `src/main/kotlin/org/ikigaidigital/domain/` — `Withdrawal` and
-  `TimeDepositRecord` (a `TimeDeposit` + its withdrawals), kept separate from
-  `TimeDeposit` so the calculator's input type stays untouched.
+- `src/main/kotlin/org/ikigaidigital/application/models/TimeDepositRecord.kt`
+  — a `TimeDeposit` + its `Withdrawal`s, composed for the "get all deposits"
+  read path. Lives in `application/`, not `domain/`, because it isn't part
+  of the calculator's ubiquitous language (it never sees this type) — it's
+  an application-layer read-model assembled to serve
+  `GetAllTimeDepositsUseCase`/`TimeDepositRepositoryPort.findAll()`.
 - `src/main/kotlin/org/ikigaidigital/application/port/input/` —
   `UpdateTimeDepositBalancesUseCase`, `GetAllTimeDepositsUseCase` (inbound
   ports, one per REST endpoint).
@@ -59,8 +69,8 @@ implementation.
   creating time deposits/withdrawals, so this is the seam used to get data
   into the DB for manual/swagger testing).
 - `docker-compose.yml` — local Postgres for `mvn spring-boot:run`.
-- `src/test/kotlin/org/ikigaidigital/TimeDepositCalculatorTest.kt` — real
-  unit tests covering every domain rule (30-day blackout, per-plan rates,
+- `src/test/kotlin/org/ikigaidigital/domain/TimeDepositCalculatorTest.kt` —
+  real unit tests covering every domain rule (30-day blackout, per-plan rates,
   premium's 45-day threshold, student's 366-day cutoff, HALF_UP rounding,
   independent mutation across a list).
 - `src/test/kotlin/org/ikigaidigital/application/service/TimeDepositServiceTest.kt`

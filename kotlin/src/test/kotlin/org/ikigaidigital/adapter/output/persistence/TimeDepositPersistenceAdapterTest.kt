@@ -1,9 +1,9 @@
 package org.ikigaidigital.adapter.output.persistence
 
 import org.assertj.core.api.Assertions.assertThat
-import org.ikigaidigital.domain.TimeDeposit
-import org.ikigaidigital.domain.TimeDepositRecord
-import org.ikigaidigital.domain.Withdrawal
+import org.ikigaidigital.domain.models.TimeDeposit
+import org.ikigaidigital.application.models.TimeDepositRecord
+import org.ikigaidigital.domain.models.Withdrawal
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.BDDMockito.given

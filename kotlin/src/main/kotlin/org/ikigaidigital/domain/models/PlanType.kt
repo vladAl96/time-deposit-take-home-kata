@@ -1,4 +1,4 @@
-package org.ikigaidigital.domain
+package org.ikigaidigital.domain.models
 
 // Those would normally be fetched from an external data store (or service)
 enum class PlanType(val onsetDays : Int, val cutOffDays : Int?, val interestRate : Double) {

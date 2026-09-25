@@ -2,9 +2,9 @@ package org.ikigaidigital.adapter.input.web
 
 import org.ikigaidigital.application.port.input.GetAllTimeDepositsUseCase
 import org.ikigaidigital.application.port.input.UpdateTimeDepositBalancesUseCase
-import org.ikigaidigital.domain.TimeDeposit
-import org.ikigaidigital.domain.TimeDepositRecord
-import org.ikigaidigital.domain.Withdrawal
+import org.ikigaidigital.domain.models.TimeDeposit
+import org.ikigaidigital.application.models.TimeDepositRecord
+import org.ikigaidigital.domain.models.Withdrawal
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito.verify

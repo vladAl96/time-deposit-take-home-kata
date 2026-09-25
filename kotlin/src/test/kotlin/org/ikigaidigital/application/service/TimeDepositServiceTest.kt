@@ -3,10 +3,10 @@ package org.ikigaidigital.application.service
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.data.Offset
 import org.ikigaidigital.application.port.output.TimeDepositRepositoryPort
-import org.ikigaidigital.domain.TimeDeposit
-import org.ikigaidigital.domain.TimeDepositCalculator
-import org.ikigaidigital.domain.TimeDepositRecord
-import org.ikigaidigital.domain.Withdrawal
+import org.ikigaidigital.domain.models.TimeDeposit
+import org.ikigaidigital.domain.service.TimeDepositCalculator
+import org.ikigaidigital.application.models.TimeDepositRecord
+import org.ikigaidigital.domain.models.Withdrawal
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.LocalDate

@@ -2,6 +2,8 @@ package org.ikigaidigital.domain
 
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.data.Offset
+import org.ikigaidigital.domain.models.TimeDeposit
+import org.ikigaidigital.domain.service.TimeDepositCalculator
 import org.junit.jupiter.api.Test
 
 private val TOLERANCE = Offset.offset(0.001)

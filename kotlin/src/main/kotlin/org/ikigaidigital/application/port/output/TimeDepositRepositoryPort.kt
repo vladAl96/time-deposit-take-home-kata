@@ -1,7 +1,7 @@
 package org.ikigaidigital.application.port.output
 
-import org.ikigaidigital.domain.TimeDeposit
-import org.ikigaidigital.domain.TimeDepositRecord
+import org.ikigaidigital.domain.models.TimeDeposit
+import org.ikigaidigital.application.models.TimeDepositRecord
 
 interface TimeDepositRepositoryPort {
     fun findAll(): List<TimeDepositRecord>

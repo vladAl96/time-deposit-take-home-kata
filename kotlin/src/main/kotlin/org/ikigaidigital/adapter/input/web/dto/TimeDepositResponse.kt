@@ -1,6 +1,6 @@
 package org.ikigaidigital.adapter.input.web.dto
 
-import org.ikigaidigital.domain.TimeDepositRecord
+import org.ikigaidigital.application.models.TimeDepositRecord
 import java.math.BigDecimal
 import java.time.LocalDate
 

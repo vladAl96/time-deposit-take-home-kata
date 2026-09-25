@@ -1,9 +1,9 @@
 package org.ikigaidigital.adapter.output.persistence
 
 import org.ikigaidigital.application.port.output.TimeDepositRepositoryPort
-import org.ikigaidigital.domain.TimeDeposit
-import org.ikigaidigital.domain.TimeDepositRecord
-import org.ikigaidigital.domain.Withdrawal
+import org.ikigaidigital.domain.models.TimeDeposit
+import org.ikigaidigital.application.models.TimeDepositRecord
+import org.ikigaidigital.domain.models.Withdrawal
 import org.springframework.stereotype.Component
 import java.math.BigDecimal
 
